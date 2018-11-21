@@ -5,9 +5,9 @@
  */
 package euromilhoes;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
-import java.util.TreeSet;
 
 /**
  *
@@ -15,14 +15,14 @@ import java.util.TreeSet;
  */
 public class Chave {
     
-    private TreeSet<Integer> numeros, estrelas= new TreeSet<>();
+    private ArrayList<Integer> numeros, estrelas= new ArrayList<>();
     
     public Chave(){
         gerarNumeros();
         gerarEstrelas();
     }
     
-    public Chave(TreeSet<Integer> numeros, TreeSet<Integer> estrelas){
+    public Chave(ArrayList<Integer> numeros, ArrayList<Integer> estrelas){
         this.numeros= numeros;
         this.estrelas= estrelas;
     }
@@ -35,6 +35,7 @@ public class Chave {
             } while (numeros.contains(num));
             numeros.add(num);
         }
+        Collections.sort(numeros);
     }
     
     private void gerarEstrelas(){
@@ -45,29 +46,16 @@ public class Chave {
             } while (estrelas.contains(est));
             estrelas.add(est);
         }
+        Collections.sort(estrelas);
     }
     
-    public int[] getNumeros(){
-         int[] nums= new int[5];
-         Iterator<Integer> itr= numeros.iterator();
-         int i= 0;
-         while(itr.hasNext()){
-             nums[i]= itr.next().intValue();
-             i++;        
-         }
-         return nums;
+    public ArrayList<Integer> getNumeros(){
+         return numeros;
     }
     
     
-    public int[] getEstrelas(){
-         int[] ests= new int[2];
-         Iterator<Integer> itr= estrelas.iterator();
-         int i= 0;
-         while(itr.hasNext()){
-             ests[i]= itr.next().intValue();
-             i++;        
-         }
-         return ests;
+    public ArrayList<Integer> getEstrelas(){
+         return estrelas;
     }
 
     @Override
