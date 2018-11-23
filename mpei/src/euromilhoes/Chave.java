@@ -7,6 +7,7 @@ package euromilhoes;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,20 +16,22 @@ import java.util.Objects;
  */
 public class Chave {
     
-    private ArrayList<Integer> numeros, estrelas= new ArrayList<>();
+    private List<Integer> numeros, estrelas;
     
     public Chave(){
+        numeros= new ArrayList<>();
+        estrelas= new ArrayList<>();
         gerarNumeros();
         gerarEstrelas();
     }
     
-    public Chave(ArrayList<Integer> numeros, ArrayList<Integer> estrelas){
+    public Chave(List<Integer> numeros, List<Integer> estrelas){
         this.numeros= numeros;
         this.estrelas= estrelas;
     }
     
     private void gerarNumeros(){
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
             int num;
             do {
                 num= (int) (1 + Math.random()*50);
@@ -49,12 +52,12 @@ public class Chave {
         Collections.sort(estrelas);
     }
     
-    public ArrayList<Integer> getNumeros(){
+    public List<Integer> getNumeros(){
          return numeros;
     }
     
     
-    public ArrayList<Integer> getEstrelas(){
+    public List<Integer> getEstrelas(){
          return estrelas;
     }
 
@@ -77,5 +80,10 @@ public class Chave {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Chave{" + "numeros=" + numeros + ", estrelas=" + estrelas + '}';
     }
 }
