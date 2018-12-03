@@ -1,11 +1,12 @@
 package euromilhoes;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
-public class Jogador implements java.io.Serializable {
+public class Jogador implements Serializable {
 
     private Map<Date, Chave> mapa;
     private String nome, password;
