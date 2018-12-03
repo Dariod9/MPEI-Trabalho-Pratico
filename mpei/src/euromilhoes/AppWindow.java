@@ -13,6 +13,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -56,9 +57,14 @@ public class AppWindow {
         content.add(registerPanel(), "register");
         content.add(clientMenu(), "clientMenu");
         content.add(adminMenu(), "adminMenu");
-        content.add(functPanel1(), "functPanel1");
-        content.add(functPanel2(), "functPanel2");
-        content.add(functPanel3(), "functPanel3");
+        content.add(functPanel1(1), "functPanel1");
+        content.add(functPanel2(2), "functPanel2");
+        content.add(functPanel1(3), "functPanel3");
+        content.add(functPanel2(4), "functPanel4");
+        content.add(functPanel3(6), "functPanel6");
+        content.add(functPanel3(7), "functPanel7");
+        content.add(functPanel3(8), "functPanel8");
+        content.add(functPanel1(9), "functPanel9");
 
         f.setContentPane(content);
         f.setLocationRelativeTo(null);
@@ -106,17 +112,19 @@ public class AppWindow {
         p2.setBackground(Color.white);
         login = new JButton();
         login.setText("Login");
-        login.setPreferredSize(new Dimension(100, 30));
+        login.setPreferredSize(new Dimension(140, 30));
         login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if(textField.getText().equals("root") && passwordField.getText().equals("root")){
+                if (textField.getText().equals("root") && passwordField.getText().equals("root")) {
+                    textField.setText("");
+                    passwordField.setText("");
                     cl.show(content, "adminMenu");
-                }
-                else if(!textField.getText().contains("randomPlayer") && AppUtilities.userInDatabase(textField.getText(), passwordField.getText())){
+                } else if (!textField.getText().contains("randomPlayer") && AppUtilities.userInDatabase(textField.getText(), passwordField.getText())) {
+                    textField.setText("");
+                    passwordField.setText("");
                     cl.show(content, "clientMenu");
-                }
-                else{
+                } else {
                     JOptionPane.showMessageDialog(new JFrame(), "Nome de utilizador ou password errada", "Login Inválido", JOptionPane.WARNING_MESSAGE);
                     passwordField.setText("");
                 }
@@ -124,7 +132,7 @@ public class AppWindow {
         });
         newAccount = new JButton();
         newAccount.setText("Criar conta");
-        newAccount.setPreferredSize(new Dimension(100, 30));
+        newAccount.setPreferredSize(new Dimension(140, 30));
         newAccount.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -184,31 +192,29 @@ public class AppWindow {
         p2.setBackground(Color.white);
         register = new JButton();
         register.setText("Registar");
-        register.setPreferredSize(new Dimension(100, 30));
+        register.setPreferredSize(new Dimension(140, 30));
         register.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if(AppUtilities.nameInDatabase(textField.getText())){
+                if (AppUtilities.nameInDatabase(textField.getText()) || textField.getText().contains("root") || textField.getText().contains("randomPlayer")) {
                     textField.setText("");
                     passwordField.setText("");
-                    JOptionPane.showMessageDialog(new JFrame(), "Nome de utilizador já utilizado", "Registo Inválido", JOptionPane.WARNING_MESSAGE);
-                }
-                else if(!AppUtilities.nameInDatabase(textField.getText()) && passwordField.getText().length()<8){
+                    JOptionPane.showMessageDialog(new JFrame(), "Nome de utilizador já utilizado ou inválido", "Registo Inválido", JOptionPane.WARNING_MESSAGE);
+                } else if (!AppUtilities.nameInDatabase(textField.getText()) && passwordField.getText().length() < 8) {
                     passwordField.setText("");
                     JOptionPane.showMessageDialog(new JFrame(), "Password inválida", "Registo Inválido", JOptionPane.WARNING_MESSAGE);
-                }
-                else{
+                } else {
                     AppUtilities.addUserToDatabase(textField.getText(), passwordField.getText());
                     textField.setText("");
                     passwordField.setText("");
-                    JOptionPane.showMessageDialog(new JFrame(), "Registo efectuado com sucesoo", "Registo Válido", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(new JFrame(), "Registo efectuado com sucesso", "Registo Válido", JOptionPane.INFORMATION_MESSAGE);
                     cl.show(content, "login");
                 }
             }
         });
         back = new JButton();
         back.setText("Voltar");
-        back.setPreferredSize(new Dimension(100, 30));
+        back.setPreferredSize(new Dimension(140, 30));
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -242,22 +248,53 @@ public class AppWindow {
         //Menu Buttons
         menuOp1 = new JButton();
         menuOp1.setText("Jogar no euromilhões");
+        menuOp1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cl.show(content, "functPanel1");
+            }
+        });
         p1.add(menuOp1);
 
         menuOp2 = new JButton();
         menuOp2.setText("Mostrar prémios");
+        menuOp2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cl.show(content, "functPanel2");
+            }
+        });
         p1.add(menuOp2);
 
         menuOp3 = new JButton();
         menuOp3.setText("Números mais frequentes");
+        menuOp3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cl.show(content, "functPanel3");
+            }
+        });
         p1.add(menuOp3);
 
         menuOp4 = new JButton();
         menuOp4.setText("Chave semelhantes de outros utilizadores");
+        menuOp4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cl.show(content, "functPanel4");
+            }
+        });
         p1.add(menuOp4);
 
         menuOp5 = new JButton();
         menuOp5.setText("Logout");
+        menuOp5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                AppUtilities.saveInfo();
+                cl.show(content, "login");
+            }
+        });
         p1.add(menuOp5);
 
         p.add(image, BorderLayout.NORTH);
@@ -280,22 +317,53 @@ public class AppWindow {
         //Menu Buttons
         menuOp1 = new JButton();
         menuOp1.setText("Remover Cliente");
+        menuOp1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cl.show(content, "functPanel6");
+            }
+        });
         p1.add(menuOp1);
 
         menuOp2 = new JButton();
         menuOp2.setText("Adicionar Data");
+        menuOp2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cl.show(content, "functPanel7");
+            }
+        });
         p1.add(menuOp2);
 
         menuOp3 = new JButton();
         menuOp3.setText("Remover Data");
+        menuOp3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cl.show(content, "functPanel8");
+            }
+        });
         p1.add(menuOp3);
 
         menuOp4 = new JButton();
         menuOp4.setText("Simular sorteio");
+        menuOp4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cl.show(content, "functPanel9");
+            }
+        });
         p1.add(menuOp4);
 
         menuOp5 = new JButton();
         menuOp5.setText("Logout");
+        menuOp5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                AppUtilities.saveInfo();
+                cl.show(content, "login");
+            }
+        });
         p1.add(menuOp5);
 
         p.add(image, BorderLayout.NORTH);
@@ -303,7 +371,7 @@ public class AppWindow {
         return p;
     }
 
-    private JPanel functPanel1() {
+    private JPanel functPanel1(int id) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(Color.white);
 
@@ -326,51 +394,71 @@ public class AppWindow {
             int max = (i < 5) ? 50 : 12;
             List<Integer> numsList = IntStream.rangeClosed(1, max).boxed().collect(Collectors.toList());
             nums[i] = new JComboBox(numsList.toArray(new Integer[0]));
-            nums[i].setSelectedIndex(0);
+            if (id != 1) {
+                nums[i].setEnabled(false);
+            }
             nums[i].setBackground((i < 5) ? Color.green : Color.yellow);
             p11.add(nums[i]);
         }
         p1.add(p11);
 
-        JPanel p12 = new JPanel(new FlowLayout());
-        p12.setBackground(Color.white);
-        JLabel lab2 = new JLabel();
-        lab2.setText("Data: ");
-        p12.add(lab2);
-        JComboBox[] dataFields = new JComboBox[7];
-        for (int i = 0; i < 3; i++) {
-            int min = 1;
-            int max = 31;
-            if (i == 1) {
-                min = 1;
-                max = 12;
-            } else if (i == 2) {
-                min = 2018;
-                max = 2022;
-            }
-            List<Integer> dataList = IntStream.rangeClosed(min, max).boxed().collect(Collectors.toList());
-            dataFields[i] = new JComboBox(dataList.toArray(new Integer[0]));
-            dataFields[i].setSelectedIndex(0);
-            p12.add(dataFields[i]);
+        final JComboBox data = new JComboBox(AppUtilities.datesList());;
+        if (id != 3) {
+            JPanel p12 = new JPanel(new FlowLayout());
+            p12.setBackground(Color.white);
+            JLabel lab2 = new JLabel();
+            lab2.setText("Data: ");
+            p12.add(lab2);
+            p12.add(data);
+            p1.add(p12);
         }
-        p1.add(p12);
 
         JPanel p2 = new JPanel(new FlowLayout());
         p2.setBackground(Color.white);
-        play = new JButton();
-        play.setText("Jogar Chave");
-        play.setPreferredSize(new Dimension(100, 30));
+        if (id != 3) {
+            play = new JButton();
+            play.setText((id == 1) ? "Jogar chave" : "Simular sorteio");
+            play.setPreferredSize(new Dimension(140, 30));
+            play.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    if (id == 1) {
+
+                    } else {
+                        if (data.getSelectedItem() != null) {
+                            Date d = (Date) data.getSelectedItem();
+                            if (AppUtilities.dateInDatabase(d)) {
+                                AppUtilities.addSorteioToDatabase((Date) data.getSelectedItem());
+                                data.removeItem(d);
+                                for (int i = 0; i < 7; i++) {
+                                    nums[i].setSelectedIndex(AppUtilities.chave(d)[i]-1);
+                                }
+                                JOptionPane.showMessageDialog(new JFrame(), "Sorteio efetuado com sucesso", "Sorteio Válido", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(new JFrame(), "Data já não se encontra disponível", "Sorteio Inválido", JOptionPane.WARNING_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "Sorteio Inválido", JOptionPane.WARNING_MESSAGE);
+                        }
+                    }
+                }
+            });
+            p2.add(play);
+        }
         back = new JButton();
         back.setText("Voltar");
-        back.setPreferredSize(new Dimension(100, 30));
+        back.setPreferredSize(new Dimension(140, 30));
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                cl.show(content, "clientMenu");
+                if (id < 5) {
+                    cl.show(content, "clientMenu");
+                } else {
+                    cl.show(content, "adminMenu");
+                }
             }
         });
 
-        p2.add(play);
         p2.add(back);
 
         p.add(image, BorderLayout.NORTH);
@@ -379,7 +467,7 @@ public class AppWindow {
         return p;
     }
 
-    private JPanel functPanel2() {
+    private JPanel functPanel2(int id) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(Color.white);
 
@@ -403,20 +491,20 @@ public class AppWindow {
 
         JPanel p2 = new JPanel(new FlowLayout());
         p2.setBackground(Color.white);
-        play = new JButton();
-        play.setText("Jogar Chave");
-        play.setPreferredSize(new Dimension(100, 30));
         back = new JButton();
         back.setText("Voltar");
-        back.setPreferredSize(new Dimension(100, 30));
+        back.setPreferredSize(new Dimension(140, 30));
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                cl.show(content, "clientMenu");
+                if (id < 5) {
+                    cl.show(content, "clientMenu");
+                } else {
+                    cl.show(content, "adminMenu");
+                }
             }
         });
 
-        p2.add(play);
         p2.add(back);
 
         p.add(image, BorderLayout.NORTH);
@@ -425,7 +513,7 @@ public class AppWindow {
         return p;
     }
 
-    private JPanel functPanel3() {
+    private JPanel functPanel3(int id) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(Color.white);
 
@@ -440,7 +528,8 @@ public class AppWindow {
 
         JPanel p11 = new JPanel();
         p11.setBackground(Color.white);
-        JLabel l1 = new JLabel("Chave: ", JLabel.TRAILING);
+        JLabel l1 = new JLabel("", JLabel.TRAILING);
+        l1.setText((id == 6) ? "Cliente: " : "Data: ");
         p1.add(l1);
         JTextField textField = new JTextField(20);
         l1.setLabelFor(textField);
@@ -451,15 +540,62 @@ public class AppWindow {
         JPanel p2 = new JPanel(new FlowLayout());
         p2.setBackground(Color.white);
         play = new JButton();
-        play.setText("Jogar Chave");
-        play.setPreferredSize(new Dimension(100, 30));
+        play.setText("Efetuar operação");
+        play.setPreferredSize(new Dimension(140, 30));
+        play.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if (id == 6) {
+                    if (AppUtilities.removeUserFromDatabase(textField.getText())) {
+                        JOptionPane.showMessageDialog(new JFrame(), "Utilizador removido com sucesso", "Utilizador Válido", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(new JFrame(), "Utilizador não encontrado", "Utilizador Inválido", JOptionPane.WARNING_MESSAGE);
+                    }
+                } else {
+                    //Operações com datas
+                    String[] dataFields = textField.getText().split("/");
+                    if (dataFields.length == 3 && dataFields[0].length() == 2 && dataFields[1].length() == 2 && dataFields[2].length() == 4) {
+                        try {
+                            if (AppUtilities.validDate(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]) - 1, Integer.parseInt(dataFields[2]))) {
+                                if (id == 7) {
+                                    if (!AppUtilities.dateInDatabase(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]) - 1, Integer.parseInt(dataFields[2]))) {
+                                        if (AppUtilities.addDateToDatabase(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]) - 1, Integer.parseInt(dataFields[2]))) {
+                                            textField.setText("");
+                                            JOptionPane.showMessageDialog(new JFrame(), "Data adicionada com sucesso", "Data Válida", JOptionPane.INFORMATION_MESSAGE);
+                                        } else {
+                                            JOptionPane.showMessageDialog(new JFrame(), "Dia da semana inválido", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+                                        }
+                                    } else {
+                                        JOptionPane.showMessageDialog(new JFrame(), "Data já existente", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+                                    }
+                                } else {
+                                    if (AppUtilities.removeDateFromDatabase(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]) - 1, Integer.parseInt(dataFields[2]))) {
+                                        textField.setText("");
+                                        JOptionPane.showMessageDialog(new JFrame(), "Data removida com sucesso", "Data Válida", JOptionPane.INFORMATION_MESSAGE);
+                                    } else {
+                                        JOptionPane.showMessageDialog(new JFrame(), "Data não encontrada", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+                                    }
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(new JFrame(), "Formato de data inválido", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+                            }
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(new JFrame(), "Formato de data inválido", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(new JFrame(), "Formato de data inválido", "Data Inválida", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            }
+        });
         back = new JButton();
         back.setText("Voltar");
-        back.setPreferredSize(new Dimension(100, 30));
+        back.setPreferredSize(new Dimension(140, 30));
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                cl.show(content, "clientMenu");
+                textField.setText("");
+                cl.show(content, "adminMenu");
             }
         });
 

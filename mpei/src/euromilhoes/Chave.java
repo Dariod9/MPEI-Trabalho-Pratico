@@ -5,6 +5,7 @@
  */
 package euromilhoes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Objects;
  *
  * @author Ricardo Carvalho
  */
-public class Chave {
+public class Chave implements Serializable {
     
     private List<Integer> numeros, estrelas;
     
@@ -61,6 +62,14 @@ public class Chave {
          return estrelas;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + Objects.hashCode(this.numeros);
+        hash = 29 * hash + Objects.hashCode(this.estrelas);
+        return hash;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
