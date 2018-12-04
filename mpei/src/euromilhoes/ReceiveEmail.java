@@ -15,7 +15,6 @@ import javax.mail.*;
 import javax.mail.internet.*;
 /**
  *
- * @author Ricardo Carvalho
  */public class ReceiveEmail {
     private String saveDirectory;
  

@@ -70,6 +70,26 @@ public class Chave implements Serializable {
         return hash;
     }
     
+    public int[] hashArrays() {
+    
+    	String s1,s2,s3,s4="";
+    
+	    	s1=this.numeros.get(0)+""+this.numeros.get(1);
+	    	s2=this.numeros.get(2)+""+this.numeros.get(3);
+	    	s3=this.numeros.get(4)+"";
+	    	s4=this.estrelas.get(0)+""+this.numeros.get(1);
+	    	
+	    String[] shingles= {s1,s2,s3,s4};
+	    
+	    int[] hashes=new int[4];
+	    
+	    for(int i=0;i<hashes.length;i++) {
+	    	hashes[i]=shingles[i].hashCode();
+	    }
+	    	
+	    return hashes;
+    	}
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
