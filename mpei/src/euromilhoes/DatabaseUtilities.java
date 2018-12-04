@@ -27,6 +27,8 @@ public class DatabaseUtilities {
     private static List<Jogador> jogadores = new ArrayList<>();
     private static List<Date> dates= new ArrayList<>();
     private static Map<Date,Chave> sorteios= new TreeMap<>();
+    private static CountingBloomFilter<String> frequenciaNumeros= new CountingBloomFilter<>(50);
+    private static CountingBloomFilter<String> frequenciaEstrelas= new CountingBloomFilter<>(12);
     private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static SecureRandom rnd = new SecureRandom();
 
@@ -127,6 +129,62 @@ public class DatabaseUtilities {
         }
     }
     
+    protected static void loadFrequenciaNumeros() {
+        try {
+            FileInputStream fileIn = new FileInputStream("src/euromilhoes/data/data04.bin");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            frequenciaNumeros = (CountingBloomFilter<String>) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+            return;
+        } catch (ClassNotFoundException c) {
+            c.printStackTrace();
+            return;
+        }
+    }
+
+    protected static void saveFrequenciaNumeros() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("src/euromilhoes/data/data04.bin");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(frequenciaNumeros);
+            out.close();
+            fileOut.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+    }
+    
+    protected static void loadFrequenciaEstrelas() {
+        try {
+            FileInputStream fileIn = new FileInputStream("src/euromilhoes/data/data05.bin");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            frequenciaEstrelas = (CountingBloomFilter<String>) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+            return;
+        } catch (ClassNotFoundException c) {
+            c.printStackTrace();
+            return;
+        }
+    }
+
+    protected static void saveFrequenciaEstrelas() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("src/euromilhoes/data/data05.bin");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(frequenciaEstrelas);
+            out.close();
+            fileOut.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+    }
+    
     protected static void addJogador(Jogador j){
         jogadores.add(j);
     }
@@ -146,6 +204,34 @@ public class DatabaseUtilities {
     protected static void addSorteio(Date d, Chave c){
         dates.remove(d);
         sorteios.put(d, c);
+    }
+    
+    protected static void addJogada(Date d, Jogador j, Chave c){
+        jogadores.get(jogadores.indexOf(j)).addChave(d, c);
+    }
+    
+    protected static void insertNumber(int n){
+        frequenciaNumeros.insert(Integer.toString(n));
+    }
+    
+    protected static void insertEstrela(int n){
+        frequenciaEstrelas.insert(Integer.toString(n));
+    }
+    
+    protected static Map<Integer,Integer> numberCount(){
+        Map<Integer,Integer> count= new TreeMap<>();
+        for (int i = 0; i < 50; i++) {
+            count.put(i,frequenciaNumeros.count(Integer.toString(i)));
+        }
+        return count;
+    }
+    
+    protected static Map<Integer,Integer> estrelaCount(){
+        Map<Integer,Integer> count= new TreeMap<>();
+        for (int i = 0; i < 12; i++) {
+            count.put(i, frequenciaEstrelas.count(Integer.toString(i)));
+        }
+        return count;
     }
     
     private static void generatePlayers(){

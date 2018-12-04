@@ -5,11 +5,14 @@
  */
 package euromilhoes;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,20 +26,21 @@ public class AppUtilities {
         DatabaseUtilities.loadJogadores();
         for (Jogador j : DatabaseUtilities.getJogadores()) {
             System.out.println(j);
+            if (!j.getNome().contains("randomPlayer")) {
+                System.out.println(j.getMapa().values());
+            }
         }
         System.out.println();
         DatabaseUtilities.loadDates();
-        for(Date d: DatabaseUtilities.getDates()){
+        for (Date d : DatabaseUtilities.getDates()) {
             System.out.println(d);
         }
         System.out.println();
         DatabaseUtilities.loadSorteios();
-        for(Date d: DatabaseUtilities.getSorteios().keySet()){
-            System.out.print(d+": ");
+        for (Date d : DatabaseUtilities.getSorteios().keySet()) {
+            System.out.print(d + ": ");
             System.out.println(DatabaseUtilities.getSorteios().get(d));
         }
-
-        
         /*for (int i = 0; i < 100; i++) {
             Chave premio= new Chave();
             ChavesPremio cp = new ChavesPremio(premio);
@@ -53,18 +57,91 @@ public class AppUtilities {
                 System.out.println();
             }
         }*/
+        Chave c= new Chave();
+        System.out.println("Chave: "+c);
+        List<Chave> list= new ArrayList<>();
+        for (int i = 0; i < 1000; i++) {
+            list.add(new Chave());
+        }
+        Minhash mh= new Minhash();
+        System.out.println(mh.getMostSimilar(c, list));
+        
     }
 
     protected static void loadInfo() {
         DatabaseUtilities.loadJogadores();
         DatabaseUtilities.loadDates();
         DatabaseUtilities.loadSorteios();
+        DatabaseUtilities.loadFrequenciaNumeros();
+        DatabaseUtilities.loadFrequenciaEstrelas();
     }
 
     protected static void saveInfo() {
         DatabaseUtilities.saveJogadores();
         DatabaseUtilities.saveDates();
         DatabaseUtilities.saveSorteios();
+        DatabaseUtilities.saveFrequenciaNumeros();
+        DatabaseUtilities.saveFrequenciaEstrelas();
+    }
+
+    protected static void defaultUsersJogada(Date d) {
+        for (Jogador j : DatabaseUtilities.getJogadores()) {
+            if (j.getNome().contains("randomPlayer")) {
+                Chave c = new Chave();
+                for (int i : c.getNumeros()) {
+                    DatabaseUtilities.insertNumber(i);
+                }
+                for (int i : c.getEstrelas()) {
+                    DatabaseUtilities.insertEstrela(i);
+                }
+                addJogadaToDatabase(d, j, c.getNumeros(), c.getEstrelas());
+            }
+        }
+    }
+
+    protected static boolean applyCountingBloomFilterToCheckAwards(Date d, Jogador j) {
+        int numberOfAwards = 10778691;
+        CountingBloomFilter<Chave> awards = new CountingBloomFilter<>(numberOfAwards);
+        ChavesPremio cp = new ChavesPremio(DatabaseUtilities.getSorteios().get(d));
+        List<Chave> keys = cp.getChaves();
+        for (int i = 0; i < numberOfAwards; i++) {
+            awards.insert(keys.get(i));
+        }
+        return awards.membershipTest(j.getMapa().get(d));
+    }
+
+    protected static int[] mostFrequentChave() {
+        int[] mostFreq = new int[7];
+        int index = 0;
+        List<Integer> freqNum = new ArrayList<>(DatabaseUtilities.numberCount().values());
+        Collections.sort(freqNum);
+        freqNum = freqNum.subList(45, 50);
+        for (Entry<Integer, Integer> entry : DatabaseUtilities.numberCount().entrySet()) {
+            for (int i = 0; i < 5; i++) {
+                if (entry.getValue().equals(freqNum.get(i))) {
+                    mostFreq[index] = entry.getKey();
+                    index++;
+                }
+            }
+            if (index == 5) {
+                break;
+            }
+        }
+        List<Integer> freqEstrl = new ArrayList<>(DatabaseUtilities.estrelaCount().values());
+        Collections.sort(freqEstrl);
+        freqEstrl = freqEstrl.subList(10, 12);
+        for (Entry<Integer, Integer> entry : DatabaseUtilities.estrelaCount().entrySet()) {
+            for (int i = 0; i < 2; i++) {
+                if (entry.getValue().equals(freqEstrl.get(i))) {
+                    mostFreq[index] = entry.getKey();
+                    index++;
+                }
+            }
+            if (index == 7) {
+                break;
+            }
+        }
+        return mostFreq;
     }
 
     protected static Date[] datesList() {
@@ -80,6 +157,27 @@ public class AppUtilities {
     protected static boolean userInDatabase(String name, String pass) {
         Jogador j = new Jogador(name, pass);
         return DatabaseUtilities.getJogadores().contains(j);
+    }
+
+    protected static Jogador getUser(String name, String pass) {
+        Jogador j = new Jogador(name, pass);
+        List<Jogador> list = DatabaseUtilities.getJogadores();
+        return list.get(list.indexOf(j));
+    }
+
+    protected static Date[] getSorteiosDates() {
+        return DatabaseUtilities.getSorteios().keySet().toArray(new Date[0]);
+    }
+
+    protected static String getChaveStringByUser(Date d, Jogador j) {
+        List<Integer> numeros = j.getMapa().get(d).getNumeros();
+        List<Integer> estrelas = j.getMapa().get(d).getEstrelas();
+        String s = "Números: " + numeros.get(0);
+        for (int i = 1; i < 5; i++) {
+            s += ", " + numeros.get(i);
+        }
+        s += "\nEstrelas: " + estrelas.get(0) + ", " + estrelas.get(1);
+        return s;
     }
 
     protected static boolean nameInDatabase(String name) {
@@ -118,14 +216,22 @@ public class AppUtilities {
         DatabaseUtilities.addSorteio(d, new Chave());
     }
 
+    protected static void addJogadaToDatabase(Date d, Jogador j, List<Integer> nums, List<Integer> estrelas) {
+        for (int i : nums) {
+            DatabaseUtilities.insertNumber(i);
+        }
+        for (int i : nums) {
+            DatabaseUtilities.insertEstrela(i);
+        }
+        DatabaseUtilities.addJogada(d, j, new Chave(nums, estrelas));
+    }
+
     protected static boolean removeUserFromDatabase(String name) {
         return DatabaseUtilities.removeJogador(new Jogador(name, passwordByName(name)));
     }
 
     private static String passwordByName(String name) {
-        Iterator it = DatabaseUtilities.getJogadores().iterator();
-        while (it.hasNext()) {
-            Jogador j = (Jogador) it.next();
+        for (Jogador j : DatabaseUtilities.getJogadores()) {
             if (j.getNome().equals(name)) {
                 return j.getPassword();
             }

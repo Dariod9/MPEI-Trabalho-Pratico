@@ -58,6 +58,4 @@ public class Jogador implements Serializable {
         }
         return true;
     }
-    
-    
 }

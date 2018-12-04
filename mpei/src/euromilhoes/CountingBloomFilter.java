@@ -5,6 +5,7 @@
  */
 package euromilhoes;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,13 +13,13 @@ import java.util.Map;
  *
  * @author Ricardo Carvalho
  */
-public class CountingBloomFilter<T> {
+public class CountingBloomFilter<T> implements Serializable { // Data type of T should be serialiable  
     
     private int[] buckets;
     
     private static int k, p= 207786913;
     
-    private final static int countingMaxValue= 15;
+    private final static int countingMaxValue= Integer.MAX_VALUE;
     
     private Map<Integer,Integer> seeds;
             
