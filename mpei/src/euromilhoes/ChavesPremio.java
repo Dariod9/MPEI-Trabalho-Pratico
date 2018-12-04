@@ -25,6 +25,11 @@ public class ChavesPremio {
         this.sorteio = sorteio;
         gerarChaves();
     }
+    
+    public ChavesPremio(Chave sorteio, int numeros, int estrelas) {
+        this.sorteio = sorteio;
+        gerarChaves(numeros, estrelas);
+    }
 
     public List<Chave> getChaves() {
         return chaves;
@@ -50,6 +55,10 @@ public class ChavesPremio {
         addToChavesList(5, 2);
     }
 
+    private void gerarChaves(int nums, int estrls) {
+        addToChavesList(nums, estrls);
+    }
+     
     private void addToChavesList(int nums, int estrls) {
         List<List<Integer>> numsComb = new ArrayList<>();
         List<List<Integer>> estrlsComb = new ArrayList<>();

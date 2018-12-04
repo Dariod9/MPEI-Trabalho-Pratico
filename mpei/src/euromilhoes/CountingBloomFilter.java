@@ -23,7 +23,7 @@ public class CountingBloomFilter<T> implements Serializable { // Data type of T 
     
     private Map<Integer,Integer> seeds;
             
-    private final double probabilityFP= 0.001;
+    private final double probabilityFP= 0.0005;
     
     public CountingBloomFilter(int m){
         int size= (optimalSize(m));
@@ -97,8 +97,8 @@ public class CountingBloomFilter<T> implements Serializable { // Data type of T 
         //a-b
         Map<Integer,Integer> seeds= new HashMap<>();
         while(seeds.size()<k){
-            int a= (int) (k+ Math.random()*30);
-            int b= (int) (k+Math.random()*20);
+            int a= (int) (k+Math.random()*15);
+            int b= (int) (k+Math.random()*10);
             seeds.put(a, b);
         }
         return seeds;

@@ -45,6 +45,7 @@ public class AppWindow {
     private JButton login, newAccount, register, back, menuOp1, menuOp2, menuOp3, menuOp4, menuOp5, play;
     private CardLayout cl;
     private JPanel content;
+    private JLabel userString;
     private Jogador currentPlayer;
 
     public AppWindow() {
@@ -124,13 +125,13 @@ public class AppWindow {
                 if (textField.getText().equals("root") && passwordField.getText().equals("root")) {
                     textField.setText("");
                     passwordField.setText("");
-                    currentPlayer=null;
+                    currentPlayer = null;
                     cl.show(content, "adminMenu");
                 } else if (!textField.getText().contains("randomPlayer") && AppUtilities.userInDatabase(textField.getText(), passwordField.getText())) {
-                    currentPlayer= AppUtilities.getUser(textField.getText(), passwordField.getText());
-                    System.out.println(currentPlayer);
+                    currentPlayer = AppUtilities.getUser(textField.getText(), passwordField.getText());
                     textField.setText("");
                     passwordField.setText("");
+                    userString.setText("Username: " + currentPlayer.getNome() + ",  Prémios esperados: " + currentPlayer.getPremiosEsperados() + ",  Total em prémios: " + currentPlayer.getTotalPremios() + "€");
                     cl.show(content, "clientMenu");
                 } else {
                     JOptionPane.showMessageDialog(new JFrame(), "Nome de utilizador ou password errada", "Login Inválido", JOptionPane.WARNING_MESSAGE);
@@ -246,12 +247,12 @@ public class AppWindow {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(Color.white);
 
-        JPanel award= new JPanel(new FlowLayout());
-        award.setBackground(Color.white);
-        JLabel premioEsperado= new JLabel();
-        premioEsperado.setText("Prémios esperados: ");
-        award.add(premioEsperado);
-        
+        JPanel user = new JPanel(new FlowLayout());
+        user.setBackground(Color.white);
+        userString = new JLabel();
+        userString.setText("");
+        user.add(userString);
+
         JPanel image = new JPanel(new FlowLayout());
         image.setBackground(Color.white);
         JLabel l = new JLabel();
@@ -311,8 +312,8 @@ public class AppWindow {
             }
         });
         p1.add(menuOp5);
-        
-        p.add(award, BorderLayout.NORTH);
+
+        p.add(user, BorderLayout.NORTH);
         p.add(image, BorderLayout.CENTER);
         p.add(p1, BorderLayout.SOUTH);
         return p;
@@ -381,7 +382,7 @@ public class AppWindow {
             }
         });
         p1.add(menuOp5);
-        
+
         p.add(image, BorderLayout.CENTER);
         p.add(p1, BorderLayout.SOUTH);
         return p;
@@ -417,15 +418,15 @@ public class AppWindow {
             p11.add(nums[i]);
         }
         p1.add(p11);
-        
-        if(id==3){
-            int[] mostFrequent= AppUtilities.mostFrequentChave();
+
+        if (id == 3) {
+            int[] mostFrequent = AppUtilities.mostFrequentChave();
             for (int i = 0; i < 7; i++) {
                 nums[i].setSelectedIndex(mostFrequent[i]);
             }
         }
 
-        final JComboBox data = new JComboBox((id!=2)? AppUtilities.datesList() : AppUtilities.getSorteiosDates());
+        final JComboBox data = new JComboBox((id != 2) ? AppUtilities.datesList() : AppUtilities.getSorteiosDates());
         if (id != 3) {
             JPanel p12 = new JPanel(new FlowLayout());
             p12.setBackground(Color.white);
@@ -446,51 +447,49 @@ public class AppWindow {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
                     if (id == 1) {
-                        if(data.getSelectedItem() != null){
-                            List<Integer> numeros= new ArrayList<>();
-                            List<Integer> estrelas= new ArrayList<>();
+                        if (data.getSelectedItem() != null) {
+                            List<Integer> numeros = new ArrayList<>();
+                            List<Integer> estrelas = new ArrayList<>();
                             for (int i = 0; i < 7; i++) {
-                                boolean b = (i<5) ? numeros.add((Integer)nums[i].getSelectedItem()) : estrelas.add((Integer)nums[i].getSelectedItem()); 
+                                boolean b = (i < 5) ? numeros.add((Integer) nums[i].getSelectedItem()) : estrelas.add((Integer) nums[i].getSelectedItem());
                             }
-                            Set<Integer> uniqueNumeros= new HashSet<>(numeros);
-                            Set<Integer> uniqueEstrelas= new HashSet<>(estrelas);
-                            if(numeros.size()==uniqueNumeros.size() && estrelas.size()==uniqueEstrelas.size()){
-                                if(!currentPlayer.getMapa().keySet().contains((Date) data.getSelectedItem()) && AppUtilities.dateInDatabase((Date) data.getSelectedItem())){
+                            Set<Integer> uniqueNumeros = new HashSet<>(numeros);
+                            Set<Integer> uniqueEstrelas = new HashSet<>(estrelas);
+                            if (numeros.size() == uniqueNumeros.size() && estrelas.size() == uniqueEstrelas.size()) {
+                                if (!currentPlayer.getMapa().keySet().contains((Date) data.getSelectedItem()) && AppUtilities.dateInDatabase((Date) data.getSelectedItem())) {
                                     Collections.sort(numeros);
                                     Collections.sort(estrelas);
                                     AppUtilities.addJogadaToDatabase((Date) data.getSelectedItem(), currentPlayer, numeros, estrelas);
                                     AppUtilities.defaultUsersJogada((Date) data.getSelectedItem());
+                                    currentPlayer.setEvento();
                                     JOptionPane.showMessageDialog(new JFrame(), "Jogada efectuada com sucesso", "Jogada Válida", JOptionPane.INFORMATION_MESSAGE);
-                                }
-                                else{
+                                } else {
                                     JOptionPane.showMessageDialog(new JFrame(), "Jogada já efectuada na data ou data não disponível", "Jogada Inválida", JOptionPane.WARNING_MESSAGE);
                                 }
+                            } else {
+                                JOptionPane.showMessageDialog(new JFrame(), "Chave inválida", "Jogada Inválida", JOptionPane.WARNING_MESSAGE);
                             }
-                            else{
-                               JOptionPane.showMessageDialog(new JFrame(), "Chave inválida", "Jogada Inválida", JOptionPane.WARNING_MESSAGE);  
-                            }
-                        }
-                        else{
-                           JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "Jogada Inválida", JOptionPane.WARNING_MESSAGE); 
-                        }
-                    } else if(id==2){
-                        if(data.getSelectedItem() != null){
-                           if(currentPlayer.getMapa().keySet().contains((Date) data.getSelectedItem())){
-                               for (int i = 0; i < 7; i++) {
-                                    nums[i].setSelectedIndex(AppUtilities.chave((Date) data.getSelectedItem())[i]-1);
-                               }
-                               if(AppUtilities.applyCountingBloomFilterToCheckAwards((Date) data.getSelectedItem(), currentPlayer)){
-                                   JOptionPane.showMessageDialog(new JFrame(), "Prémio:\n" +AppUtilities.getChaveStringByUser((Date) data.getSelectedItem(), currentPlayer), "Operação Válida", JOptionPane.INFORMATION_MESSAGE); 
-                               }
-                               else{
-                                   JOptionPane.showMessageDialog(new JFrame(), "Chave sem prémio", "Operação Válida", JOptionPane.INFORMATION_MESSAGE); 
-                               }
-                           }
-                           else{
-                               JOptionPane.showMessageDialog(new JFrame(), "Não foi efectuada nenhuma jogada nessa data", "Operação Inválida", JOptionPane.WARNING_MESSAGE); 
-                           }
                         } else {
-                           JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "Operação Inválida", JOptionPane.WARNING_MESSAGE); 
+                            JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "Jogada Inválida", JOptionPane.WARNING_MESSAGE);
+                        }
+                    } else if (id == 2) {
+                        if (data.getSelectedItem() != null) {
+                            if (currentPlayer.getMapa().keySet().contains((Date) data.getSelectedItem())) {
+                                for (int i = 0; i < 7; i++) {
+                                    nums[i].setSelectedIndex(AppUtilities.chave((Date) data.getSelectedItem())[i] - 1);
+                                }
+                                int premio = AppUtilities.applyCountingBloomFilterToCheckAwards((Date) data.getSelectedItem(), currentPlayer);
+                                if (premio > 0) {
+                                    currentPlayer.setPremio(premio);
+                                    JOptionPane.showMessageDialog(new JFrame(), "Prémio de " + premio + "€:\n" + AppUtilities.getChaveStringByUser((Date) data.getSelectedItem(), currentPlayer), "Operação Válida", JOptionPane.INFORMATION_MESSAGE);
+                                } else {
+                                    JOptionPane.showMessageDialog(new JFrame(), "Chave sem prémio", "Operação Válida", JOptionPane.INFORMATION_MESSAGE);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(new JFrame(), "Não foi efectuada nenhuma jogada nessa data", "Operação Inválida", JOptionPane.WARNING_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "Operação Inválida", JOptionPane.WARNING_MESSAGE);
                         }
                     } else {
                         if (data.getSelectedItem() != null) {
@@ -499,7 +498,7 @@ public class AppWindow {
                                 AppUtilities.addSorteioToDatabase((Date) data.getSelectedItem());
                                 data.removeItem(d);
                                 for (int i = 0; i < 7; i++) {
-                                    nums[i].setSelectedIndex(AppUtilities.chave(d)[i]-1);
+                                    nums[i].setSelectedIndex(AppUtilities.chave(d)[i] - 1);
                                 }
                                 JOptionPane.showMessageDialog(new JFrame(), "Sorteio efetuado com sucesso", "Sorteio Válido", JOptionPane.INFORMATION_MESSAGE);
                             } else {
@@ -520,6 +519,7 @@ public class AppWindow {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if (id < 5) {
+                    userString.setText("Username: " + currentPlayer.getNome() + ",  Prémios esperados: " + currentPlayer.getPremiosEsperados() + ",  Total em prémios: " + currentPlayer.getTotalPremios() + "€");
                     cl.show(content, "clientMenu");
                 } else {
                     cl.show(content, "adminMenu");
@@ -545,18 +545,28 @@ public class AppWindow {
         l.setIcon(new ImageIcon(getClass().getResource("/euromilhoes/data/logo.png")));
         image.add(l);
 
-        JPanel p1 = new JPanel(new GridLayout(1, 1));
+        JPanel p1 = new JPanel(new GridLayout(2, 1));
         p1.setBackground(Color.white);
         SimpleAttributeSet sa = new SimpleAttributeSet();
         StyleConstants.setAlignment(sa, StyleConstants.ALIGN_CENTER);
         JTextPane textArea = new JTextPane();
         textArea.getStyledDocument().setParagraphAttributes(0, 600, sa, false);
-        textArea.setText("1111111111111111111\n2\n3\n4\n5\n6\n7\n8\n9");
+        textArea.setText("");
         textArea.setBackground(Color.WHITE);
         textArea.setEditable(false);
         p1.add(textArea);
-        JScrollPane sp = new JScrollPane(p1);
 
+        final JComboBox data = new JComboBox(AppUtilities.getSorteiosDates());
+        JPanel p12 = new JPanel(new FlowLayout());
+        p12.setBackground(Color.white);
+        JLabel lab2 = new JLabel();
+        lab2.setText("Data: ");
+        p12.add(lab2);
+        p12.add(data);
+        p1.add(p12);
+        
+        JScrollPane sp = new JScrollPane(p1);
+        
         JPanel p2 = new JPanel(new FlowLayout());
         p2.setBackground(Color.white);
         back = new JButton();

@@ -57,15 +57,44 @@ public class AppUtilities {
                 System.out.println();
             }
         }*/
-        Chave c= new Chave();
-        System.out.println("Chave: "+c);
-        List<Chave> list= new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
-            list.add(new Chave());
-        }
-        Minhash mh= new Minhash();
-        System.out.println(mh.getMostSimilar(c, list));
-        
+ /*Chave c= null;
+        CountingBloomFilter<Chave> cbm= null;
+        List<Chave> pr= null;
+        boolean b;
+        Chave teste= null;
+        for (int i = 0; i < 10; i++) {
+            c= new Chave();
+            ChavesPremio cp = new ChavesPremio(c, 1, 2);
+            pr = cp.getChaves();
+            cbm = new CountingBloomFilter<>(pr.size());
+            for (Chave ch : pr) {
+                cbm.insert(ch);
+            }
+            teste = new Chave();
+            b = cbm.membershipTest(teste);
+            if (b) {
+                System.out.println("Chave: " + c);
+                System.out.println("Teste: " + teste);
+            }
+            System.out.println("n: 1 | e: 2  : " + b);
+            for (int j = 2; j < 6; j++) {
+                for (int k = 0; k < 3; k++) {
+                    cp = new ChavesPremio(c, j, k);
+                    pr = cp.getChaves();
+                    cbm = new CountingBloomFilter<>(pr.size());
+                    for (Chave ch : pr) {
+                        cbm.insert(ch);
+                    }
+                    b = cbm.membershipTest(teste);
+                    if (b) {
+                        System.out.println("Chave: " + c);
+                        System.out.println("Teste: " + teste);
+                    }
+                    System.out.println("n: " + j + "| e: " + k + "  : " + b);
+                }
+            }
+        }*/
+
     }
 
     protected static void loadInfo() {
@@ -99,15 +128,62 @@ public class AppUtilities {
         }
     }
 
-    protected static boolean applyCountingBloomFilterToCheckAwards(Date d, Jogador j) {
-        int numberOfAwards = 10778691;
-        CountingBloomFilter<Chave> awards = new CountingBloomFilter<>(numberOfAwards);
-        ChavesPremio cp = new ChavesPremio(DatabaseUtilities.getSorteios().get(d));
+    protected static int applyCountingBloomFilterToCheckAwards(Date d, Jogador jog) {
+        ChavesPremio cp = new ChavesPremio(DatabaseUtilities.getSorteios().get(d), 1, 2);
         List<Chave> keys = cp.getChaves();
-        for (int i = 0; i < numberOfAwards; i++) {
+        CountingBloomFilter<Chave> awards = new CountingBloomFilter<>(keys.size());
+        for (int i = 0; i < keys.size(); i++) {
             awards.insert(keys.get(i));
         }
-        return awards.membershipTest(j.getMapa().get(d));
+        if (awards.membershipTest(jog.getMapa().get(d))) {
+            return premioByCombination(1, 2);
+        }
+        for (int j = 2; j < 6; j++) {
+            for (int k = 0; k < 3; k++) {
+                cp = new ChavesPremio(DatabaseUtilities.getSorteios().get(d), j, k);
+                keys = cp.getChaves();
+                awards = new CountingBloomFilter<>(keys.size());
+                for (int i = 0; i < keys.size(); i++) {
+                    awards.insert(keys.get(i));
+                }
+                if (awards.membershipTest(jog.getMapa().get(d))) {
+                    return premioByCombination(j, k);
+                }
+            }
+        }
+        return 0;
+    }
+
+    private static int premioByCombination(int nums, int estrls) {
+        if (nums == 1 && estrls == 2) {
+            return 11;
+        } else if (nums == 2 && estrls == 0) {
+            return 5;
+        } else if (nums == 2 && estrls == 1) {
+            return 8;
+        } else if (nums == 2 && estrls == 2) {
+            return 22;
+        } else if (nums == 3 && estrls == 0) {
+            return 14;
+        } else if (nums == 3 && estrls == 1) {
+            return 16;
+        } else if (nums == 3 && estrls == 2) {
+            return 126;
+        } else if (nums == 4 && estrls == 0) {
+            return 80;
+        } else if (nums == 4 && estrls == 1) {
+            return 194;
+        } else if (nums == 4 && estrls == 2) {
+            return 5321;
+        } else if (nums == 5 && estrls == 0) {
+            return 48956;
+        } else if (nums == 5 && estrls == 1) {
+            return 840782;
+        } else if (nums == 5 && estrls == 2) {
+            return 70000000;
+        } else {
+            return 0;
+        }
     }
 
     protected static int[] mostFrequentChave() {
