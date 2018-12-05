@@ -8,6 +8,7 @@ package euromilhoes;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -59,22 +60,37 @@ public class AppWindow {
         cl = new CardLayout();
         content = new JPanel(cl);
 
-        content.add(loginPanel(), "login");
-        content.add(registerPanel(), "register");
-        content.add(clientMenu(), "clientMenu");
-        content.add(adminMenu(), "adminMenu");
-        content.add(functPanel1(1), "functPanel1");
-        content.add(functPanel1(2), "functPanel2");
-        content.add(functPanel1(3), "functPanel3");
-        content.add(functPanel2(4), "functPanel4");
-        content.add(functPanel3(6), "functPanel6");
-        content.add(functPanel3(7), "functPanel7");
-        content.add(functPanel3(8), "functPanel8");
-        content.add(functPanel1(9), "functPanel9");
+        JPanel p1= loginPanel();
+        p1.setName("login");
+        content.add(p1, "login");
+        JPanel p2= registerPanel();
+        p2.setName("register");
+        content.add(p2, "register");
+        JPanel p3= clientMenu();
+        p3.setName("clientMenu");
+        content.add(p3, "clientMenu");
+        JPanel p4= adminMenu();
+        p4.setName("adminMenu");
+        content.add(p4, "adminMenu");
 
         f.setContentPane(content);
         f.setLocationRelativeTo(null);
         f.setVisible(true);
+    }
+    
+    private void updatePanel(JPanel p, String name) {
+        Component comp= null;
+        Component[] c= content.getComponents();
+        for (Component cmp : c) {
+            if(cmp.getName().equals(name)){
+                comp= cmp;
+            }
+        }
+        if(comp!= null){
+            content.remove(comp);
+        }
+        p.setName(name);
+        content.add(p, name);
     }
 
     private JPanel loginPanel() {
@@ -267,6 +283,7 @@ public class AppWindow {
         menuOp1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                updatePanel(functPanel1(1), "functPanel1" );
                 cl.show(content, "functPanel1");
             }
         });
@@ -277,6 +294,7 @@ public class AppWindow {
         menuOp2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                updatePanel(functPanel1(2), "functPanel2" );
                 cl.show(content, "functPanel2");
             }
         });
@@ -287,6 +305,7 @@ public class AppWindow {
         menuOp3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                updatePanel(functPanel1(3), "functPanel3" );
                 cl.show(content, "functPanel3");
             }
         });
@@ -297,6 +316,7 @@ public class AppWindow {
         menuOp4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                updatePanel(functPanel2(4), "functPanel4");
                 cl.show(content, "functPanel4");
             }
         });
@@ -337,6 +357,7 @@ public class AppWindow {
         menuOp1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                updatePanel(functPanel3(6), "functPanel6");
                 cl.show(content, "functPanel6");
             }
         });
@@ -347,6 +368,7 @@ public class AppWindow {
         menuOp2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                updatePanel(functPanel3(7), "functPanel7");
                 cl.show(content, "functPanel7");
             }
         });
@@ -357,6 +379,7 @@ public class AppWindow {
         menuOp3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                updatePanel(functPanel3(8), "functPanel8");
                 cl.show(content, "functPanel8");
             }
         });
@@ -367,6 +390,7 @@ public class AppWindow {
         menuOp4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                updatePanel(functPanel1(9), "functPanel9");
                 cl.show(content, "functPanel9");
             }
         });
@@ -426,7 +450,7 @@ public class AppWindow {
             }
         }
 
-        final JComboBox data = new JComboBox((id != 2) ? AppUtilities.datesList() : AppUtilities.getSorteiosDates());
+        JComboBox data = new JComboBox((id != 2) ? AppUtilities.datesList() : AppUtilities.getSorteiosByUserDates(currentPlayer));
         if (id != 3) {
             JPanel p12 = new JPanel(new FlowLayout());
             p12.setBackground(Color.white);
@@ -436,6 +460,7 @@ public class AppWindow {
             p12.add(data);
             p1.add(p12);
         }
+        
 
         JPanel p2 = new JPanel(new FlowLayout());
         p2.setBackground(Color.white);
@@ -485,6 +510,8 @@ public class AppWindow {
                                 } else {
                                     JOptionPane.showMessageDialog(new JFrame(), "Chave sem prémio", "Operação Válida", JOptionPane.INFORMATION_MESSAGE);
                                 }
+                                currentPlayer.removeChave((Date) data.getSelectedItem());
+                                data.removeItem(data.getSelectedItem());
                             } else {
                                 JOptionPane.showMessageDialog(new JFrame(), "Não foi efectuada nenhuma jogada nessa data", "Operação Inválida", JOptionPane.WARNING_MESSAGE);
                             }
@@ -534,7 +561,7 @@ public class AppWindow {
         p.add(p2, BorderLayout.SOUTH);
         return p;
     }
-
+    
     private JPanel functPanel2(int id) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(Color.white);
@@ -556,7 +583,7 @@ public class AppWindow {
         textArea.setEditable(false);
         p1.add(textArea);
 
-        final JComboBox data = new JComboBox(AppUtilities.getSorteiosDates());
+        final JComboBox data = new JComboBox(AppUtilities.getSorteiosByUserDates(currentPlayer));
         JPanel p12 = new JPanel(new FlowLayout());
         p12.setBackground(Color.white);
         JLabel lab2 = new JLabel();
@@ -634,7 +661,7 @@ public class AppWindow {
                     String[] dataFields = textField.getText().split("/");
                     if (dataFields.length == 3 && dataFields[0].length() == 2 && dataFields[1].length() == 2 && dataFields[2].length() == 4) {
                         try {
-                            if (AppUtilities.validDate(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]) - 1, Integer.parseInt(dataFields[2]))) {
+                            if (AppUtilities.validDate(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]), Integer.parseInt(dataFields[2]))) {
                                 if (id == 7) {
                                     if (!AppUtilities.dateInDatabase(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]) - 1, Integer.parseInt(dataFields[2]))) {
                                         if (AppUtilities.addDateToDatabase(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]) - 1, Integer.parseInt(dataFields[2]))) {

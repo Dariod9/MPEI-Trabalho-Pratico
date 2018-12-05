@@ -34,7 +34,7 @@ public class ContadorEstocastico implements Serializable{
             }
         }
         else{ // Tipo 2
-            double p= Math.pow(2, -prob);
+            double p= Math.pow(2, -count);
             double random= Math.random();
             if(random<=p){
                 count++;

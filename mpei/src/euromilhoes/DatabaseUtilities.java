@@ -224,6 +224,7 @@ public class DatabaseUtilities {
             count.put(i,frequenciaNumeros.count(Integer.toString(i)));
         }
         return count;
+        
     }
     
     protected static Map<Integer,Integer> estrelaCount(){

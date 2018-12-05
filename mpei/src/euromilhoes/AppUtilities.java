@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,6 +24,7 @@ import java.util.stream.Stream;
 public class AppUtilities {
 
     public static void main(String[] args) {
+        //DatabaseUtilities.generatePlayers();
         DatabaseUtilities.loadJogadores();
         for (Jogador j : DatabaseUtilities.getJogadores()) {
             System.out.println(j);
@@ -241,8 +243,10 @@ public class AppUtilities {
         return list.get(list.indexOf(j));
     }
 
-    protected static Date[] getSorteiosDates() {
-        return DatabaseUtilities.getSorteios().keySet().toArray(new Date[0]);
+    protected static Date[] getSorteiosByUserDates(Jogador j) {
+        Set<Date> sorteios= DatabaseUtilities.getSorteios().keySet();
+        sorteios.retainAll(j.getMapa().keySet());
+        return sorteios.toArray(new Date[0]);
     }
 
     protected static String getChaveStringByUser(Date d, Jogador j) {

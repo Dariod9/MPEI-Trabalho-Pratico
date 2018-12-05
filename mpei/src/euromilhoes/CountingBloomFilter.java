@@ -43,7 +43,7 @@ public class CountingBloomFilter<T> implements Serializable { // Data type of T 
     private int [] getPositions(T c){
         int[] positions= new int[k];
         for (int i = 0; i < k; i++) {
-            int a= (Integer)seeds.keySet().toArray()[i];
+            int a= (int) seeds.keySet().toArray()[i];
             positions[i]= Math.abs(((a* c.hashCode() + seeds.get(a)) % p) % buckets.length);
         }
         return positions;

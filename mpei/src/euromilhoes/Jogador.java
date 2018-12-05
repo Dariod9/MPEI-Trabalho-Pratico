@@ -45,6 +45,10 @@ public class Jogador implements Serializable {
         mapa.put(data, chave);
     }
     
+    public void removeChave(Date data){
+        mapa.remove(data);
+    }
+    
     public void setPremio(int premio){
         totalPremios+= premio;
     }
