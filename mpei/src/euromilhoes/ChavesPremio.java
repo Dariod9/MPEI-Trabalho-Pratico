@@ -63,7 +63,7 @@ public class ChavesPremio {
         List<List<Integer>> numsComb = new ArrayList<>();
         List<List<Integer>> estrlsComb = new ArrayList<>();
 
-        //NÃºmeros   
+        //Números   
         for (List<Integer> l1 : combinationsInList(nums, sorteio.getNumeros())) {
             for (List<Integer> l2 : combinationsOutList(50, sorteio.getNumeros().size() - nums, sorteio.getNumeros())) {
                 List<Integer> numeros = Stream.concat(l1.stream(), l2.stream()).collect(Collectors.toList());
@@ -90,7 +90,7 @@ public class ChavesPremio {
         }
     }
     
-    //Todas as combinaÃ§Ãµes de nÃºmeros que nÃ£o pertencem a uma lista(k nÃºmeros de (1,n))
+    //Todas as combinações de números que não pertencem a uma lista(k números de (1,n))
     private List<List<Integer>> combinationsOutList(int n, int k, List list) {
         List<List<Integer>> result = new ArrayList<>();
 
@@ -104,7 +104,7 @@ public class ChavesPremio {
         return result;
     }
     
-    //Todas as combinaÃ§Ãµes de nÃºmeros pertencem a uma lista(k nÃºmeros)
+    //Todas as combinações de números pertencem a uma lista(k números)
     private List<List<Integer>> combinationsInList(int k, List list) {
         List<List<Integer>> result = new ArrayList<>();
 

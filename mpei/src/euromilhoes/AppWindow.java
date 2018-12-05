@@ -131,10 +131,10 @@ public class AppWindow {
                     currentPlayer = AppUtilities.getUser(textField.getText(), passwordField.getText());
                     textField.setText("");
                     passwordField.setText("");
-                    userString.setText("Username: " + currentPlayer.getNome() + ",  Pr√©mios esperados: " + currentPlayer.getPremiosEsperados() + ",  Total em pr√©mios: " + currentPlayer.getTotalPremios() + "‚Ç¨");
+                    userString.setText("Username: " + currentPlayer.getNome() + ",  PrÈmios esperados: " + currentPlayer.getPremiosEsperados() + ",  Total em prÈmios: " + currentPlayer.getTotalPremios() + "Ä");
                     cl.show(content, "clientMenu");
                 } else {
-                    JOptionPane.showMessageDialog(new JFrame(), "Nome de utilizador ou password errada", "Login Inv√°lido", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(new JFrame(), "Nome de utilizador ou password errada", "Login Inv·lido", JOptionPane.WARNING_MESSAGE);
                     passwordField.setText("");
                 }
             }
@@ -208,15 +208,15 @@ public class AppWindow {
                 if (AppUtilities.nameInDatabase(textField.getText()) || textField.getText().contains("root") || textField.getText().contains("randomPlayer")) {
                     textField.setText("");
                     passwordField.setText("");
-                    JOptionPane.showMessageDialog(new JFrame(), "Nome de utilizador j√° utilizado ou inv√°lido", "Registo Inv√°lido", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(new JFrame(), "Nome de utilizador j· utilizado ou inv·lido", "Registo Inv·lido", JOptionPane.WARNING_MESSAGE);
                 } else if (!AppUtilities.nameInDatabase(textField.getText()) && passwordField.getText().length() < 8) {
                     passwordField.setText("");
-                    JOptionPane.showMessageDialog(new JFrame(), "Password inv√°lida", "Registo Inv√°lido", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(new JFrame(), "Password inv·lida", "Registo Inv·lido", JOptionPane.WARNING_MESSAGE);
                 } else {
                     AppUtilities.addUserToDatabase(textField.getText(), passwordField.getText());
                     textField.setText("");
                     passwordField.setText("");
-                    JOptionPane.showMessageDialog(new JFrame(), "Registo efectuado com sucesso", "Registo V√°lido", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(new JFrame(), "Registo efectuado com sucesso", "Registo V·lido", JOptionPane.INFORMATION_MESSAGE);
                     cl.show(content, "login");
                     AppUtilities.saveInfo();
                 }
@@ -263,7 +263,7 @@ public class AppWindow {
         p1.setBackground(Color.white);
         //Menu Buttons
         menuOp1 = new JButton();
-        menuOp1.setText("Jogar no euromilh√µes");
+        menuOp1.setText("Jogar no euromilhıes");
         menuOp1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -273,7 +273,7 @@ public class AppWindow {
         p1.add(menuOp1);
 
         menuOp2 = new JButton();
-        menuOp2.setText("Verificar pr√©mio");
+        menuOp2.setText("Verificar prÈmio");
         menuOp2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -283,7 +283,7 @@ public class AppWindow {
         p1.add(menuOp2);
 
         menuOp3 = new JButton();
-        menuOp3.setText("N√∫meros mais frequentes");
+        menuOp3.setText("N˙meros mais frequentes");
         menuOp3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -462,15 +462,15 @@ public class AppWindow {
                                     AppUtilities.addJogadaToDatabase((Date) data.getSelectedItem(), currentPlayer, numeros, estrelas);
                                     AppUtilities.defaultUsersJogada((Date) data.getSelectedItem());
                                     currentPlayer.setEvento();
-                                    JOptionPane.showMessageDialog(new JFrame(), "Jogada efectuada com sucesso", "Jogada V√°lida", JOptionPane.INFORMATION_MESSAGE);
+                                    JOptionPane.showMessageDialog(new JFrame(), "Jogada efectuada com sucesso", "Jogada V·lida", JOptionPane.INFORMATION_MESSAGE);
                                 } else {
-                                    JOptionPane.showMessageDialog(new JFrame(), "Jogada j√° efectuada na data ou data n√£o dispon√≠vel", "Jogada Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                                    JOptionPane.showMessageDialog(new JFrame(), "Jogada j· efectuada na data ou data n„o disponÌvel", "Jogada Inv·lida", JOptionPane.WARNING_MESSAGE);
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(new JFrame(), "Chave inv√°lida", "Jogada Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                                JOptionPane.showMessageDialog(new JFrame(), "Chave inv·lida", "Jogada Inv·lida", JOptionPane.WARNING_MESSAGE);
                             }
                         } else {
-                            JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "Jogada Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "Jogada Inv·lida", JOptionPane.WARNING_MESSAGE);
                         }
                     } else if (id == 2) {
                         if (data.getSelectedItem() != null) {
@@ -481,15 +481,15 @@ public class AppWindow {
                                 int premio = AppUtilities.applyCountingBloomFilterToCheckAwards((Date) data.getSelectedItem(), currentPlayer);
                                 if (premio > 0) {
                                     currentPlayer.setPremio(premio);
-                                    JOptionPane.showMessageDialog(new JFrame(), "Pr√©mio de " + premio + "‚Ç¨:\n" + AppUtilities.getChaveStringByUser((Date) data.getSelectedItem(), currentPlayer), "Opera√ß√£o V√°lida", JOptionPane.INFORMATION_MESSAGE);
+                                    JOptionPane.showMessageDialog(new JFrame(), "PrÈmio de " + premio + "Ä:\n" + AppUtilities.getChaveStringByUser((Date) data.getSelectedItem(), currentPlayer), "OperaÁ„o V·lida", JOptionPane.INFORMATION_MESSAGE);
                                 } else {
-                                    JOptionPane.showMessageDialog(new JFrame(), "Chave sem pr√©mio", "Opera√ß√£o V√°lida", JOptionPane.INFORMATION_MESSAGE);
+                                    JOptionPane.showMessageDialog(new JFrame(), "Chave sem prÈmio", "OperaÁ„o V·lida", JOptionPane.INFORMATION_MESSAGE);
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(new JFrame(), "N√£o foi efectuada nenhuma jogada nessa data", "Opera√ß√£o Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                                JOptionPane.showMessageDialog(new JFrame(), "N„o foi efectuada nenhuma jogada nessa data", "OperaÁ„o Inv·lida", JOptionPane.WARNING_MESSAGE);
                             }
                         } else {
-                            JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "Opera√ß√£o Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "OperaÁ„o Inv·lida", JOptionPane.WARNING_MESSAGE);
                         }
                     } else {
                         if (data.getSelectedItem() != null) {
@@ -500,12 +500,12 @@ public class AppWindow {
                                 for (int i = 0; i < 7; i++) {
                                     nums[i].setSelectedIndex(AppUtilities.chave(d)[i] - 1);
                                 }
-                                JOptionPane.showMessageDialog(new JFrame(), "Sorteio efetuado com sucesso", "Sorteio V√°lido", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(new JFrame(), "Sorteio efetuado com sucesso", "Sorteio V·lido", JOptionPane.INFORMATION_MESSAGE);
                             } else {
-                                JOptionPane.showMessageDialog(new JFrame(), "Data j√° n√£o se encontra dispon√≠vel", "Sorteio Inv√°lido", JOptionPane.WARNING_MESSAGE);
+                                JOptionPane.showMessageDialog(new JFrame(), "Data j· n„o se encontra disponÌvel", "Sorteio Inv·lido", JOptionPane.WARNING_MESSAGE);
                             }
                         } else {
-                            JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "Sorteio Inv√°lido", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(new JFrame(), "Deve selecionar uma data", "Sorteio Inv·lido", JOptionPane.WARNING_MESSAGE);
                         }
                     }
                 }
@@ -519,7 +519,7 @@ public class AppWindow {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if (id < 5) {
-                    userString.setText("Username: " + currentPlayer.getNome() + ",  Pr√©mios esperados: " + currentPlayer.getPremiosEsperados() + ",  Total em pr√©mios: " + currentPlayer.getTotalPremios() + "‚Ç¨");
+                    userString.setText("Username: " + currentPlayer.getNome() + ",  PrÈmios esperados: " + currentPlayer.getPremiosEsperados() + ",  Total em prÈmios: " + currentPlayer.getTotalPremios() + "Ä");
                     cl.show(content, "clientMenu");
                 } else {
                     cl.show(content, "adminMenu");
@@ -618,19 +618,19 @@ public class AppWindow {
         JPanel p2 = new JPanel(new FlowLayout());
         p2.setBackground(Color.white);
         play = new JButton();
-        play.setText("Efetuar opera√ß√£o");
+        play.setText("Efetuar operaÁ„o");
         play.setPreferredSize(new Dimension(140, 30));
         play.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if (id == 6) {
                     if (AppUtilities.removeUserFromDatabase(textField.getText())) {
-                        JOptionPane.showMessageDialog(new JFrame(), "Utilizador removido com sucesso", "Utilizador V√°lido", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(new JFrame(), "Utilizador removido com sucesso", "Utilizador V·lido", JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(new JFrame(), "Utilizador n√£o encontrado", "Utilizador Inv√°lido", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(new JFrame(), "Utilizador n„o encontrado", "Utilizador Inv·lido", JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
-                    //Opera√ß√µes com datas
+                    //OperaÁıes com datas
                     String[] dataFields = textField.getText().split("/");
                     if (dataFields.length == 3 && dataFields[0].length() == 2 && dataFields[1].length() == 2 && dataFields[2].length() == 4) {
                         try {
@@ -639,29 +639,29 @@ public class AppWindow {
                                     if (!AppUtilities.dateInDatabase(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]) - 1, Integer.parseInt(dataFields[2]))) {
                                         if (AppUtilities.addDateToDatabase(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]) - 1, Integer.parseInt(dataFields[2]))) {
                                             textField.setText("");
-                                            JOptionPane.showMessageDialog(new JFrame(), "Data adicionada com sucesso", "Data V√°lida", JOptionPane.INFORMATION_MESSAGE);
+                                            JOptionPane.showMessageDialog(new JFrame(), "Data adicionada com sucesso", "Data V·lida", JOptionPane.INFORMATION_MESSAGE);
                                         } else {
-                                            JOptionPane.showMessageDialog(new JFrame(), "Dia da semana inv√°lido", "Data Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                                            JOptionPane.showMessageDialog(new JFrame(), "Dia da semana inv·lido", "Data Inv·lida", JOptionPane.WARNING_MESSAGE);
                                         }
                                     } else {
-                                        JOptionPane.showMessageDialog(new JFrame(), "Data j√° existente", "Data Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                                        JOptionPane.showMessageDialog(new JFrame(), "Data j· existente", "Data Inv·lida", JOptionPane.WARNING_MESSAGE);
                                     }
                                 } else {
                                     if (AppUtilities.removeDateFromDatabase(Integer.parseInt(dataFields[0]), Integer.parseInt(dataFields[1]) - 1, Integer.parseInt(dataFields[2]))) {
                                         textField.setText("");
-                                        JOptionPane.showMessageDialog(new JFrame(), "Data removida com sucesso", "Data V√°lida", JOptionPane.INFORMATION_MESSAGE);
+                                        JOptionPane.showMessageDialog(new JFrame(), "Data removida com sucesso", "Data V·lida", JOptionPane.INFORMATION_MESSAGE);
                                     } else {
-                                        JOptionPane.showMessageDialog(new JFrame(), "Data n√£o encontrada", "Data Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                                        JOptionPane.showMessageDialog(new JFrame(), "Data n„o encontrada", "Data Inv·lida", JOptionPane.WARNING_MESSAGE);
                                     }
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(new JFrame(), "Formato de data inv√°lido", "Data Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                                JOptionPane.showMessageDialog(new JFrame(), "Formato de data inv·lido", "Data Inv·lida", JOptionPane.WARNING_MESSAGE);
                             }
                         } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(new JFrame(), "Formato de data inv√°lido", "Data Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(new JFrame(), "Formato de data inv·lido", "Data Inv·lida", JOptionPane.WARNING_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(new JFrame(), "Formato de data inv√°lido", "Data Inv√°lida", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(new JFrame(), "Formato de data inv·lido", "Data Inv·lida", JOptionPane.WARNING_MESSAGE);
                     }
                 }
             }

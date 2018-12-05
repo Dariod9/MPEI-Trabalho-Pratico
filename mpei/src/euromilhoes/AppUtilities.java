@@ -51,7 +51,7 @@ public class AppUtilities {
             }
             Chave teste= new Chave();
             if(cbf.membershipTest(teste)){
-                System.out.println(i+ ":PrÃ©mio!!!!");
+                System.out.println(i+ ":Prémio!!!!");
                 System.out.println(premio);
                 System.out.println(teste);
                 System.out.println();
@@ -248,7 +248,7 @@ public class AppUtilities {
     protected static String getChaveStringByUser(Date d, Jogador j) {
         List<Integer> numeros = j.getMapa().get(d).getNumeros();
         List<Integer> estrelas = j.getMapa().get(d).getEstrelas();
-        String s = "NÃºmeros: " + numeros.get(0);
+        String s = "Números: " + numeros.get(0);
         for (int i = 1; i < 5; i++) {
             s += ", " + numeros.get(i);
         }
@@ -320,11 +320,11 @@ public class AppUtilities {
     }
 
     protected static boolean validDate(int day, int month, int year) {
-        //o anoÂ´mÃ­nimo considerado vÃ¡lido Ã© 2018
+        //o ano´mínimo considerado válido é 2018
         return (month > 0 && month <= 12 && day > 0 && day <= diasDoMes(month) && year >= 2018 && year <= 2022) || (month == 2 && day == 29 && anoBissexto(year) && year >= 2018 && year <= 2022);
     }
 
-    private static boolean anoBissexto(int y) { //funÃ§Ã£o protegida que verifica se um ano Ã© bissexto
+    private static boolean anoBissexto(int y) { //função protegida que verifica se um ano é bissexto
         return y % 400 == 0 || (y % 4 == 0 && y % 100 != 0);
     }
 
