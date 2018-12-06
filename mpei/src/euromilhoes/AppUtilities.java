@@ -6,12 +6,15 @@
 package euromilhoes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,81 +26,6 @@ import java.util.stream.Stream;
  */
 public class AppUtilities {
 
-    public static void main(String[] args) {
-        //DatabaseUtilities.generatePlayers();
-        DatabaseUtilities.loadJogadores();
-        for (Jogador j : DatabaseUtilities.getJogadores()) {
-            System.out.println(j);
-            if (!j.getNome().contains("randomPlayer")) {
-                System.out.println(j.getMapa().values());
-            }
-        }
-        System.out.println();
-        DatabaseUtilities.loadDates();
-        for (Date d : DatabaseUtilities.getDates()) {
-            System.out.println(d);
-        }
-        System.out.println();
-        DatabaseUtilities.loadSorteios();
-        for (Date d : DatabaseUtilities.getSorteios().keySet()) {
-            System.out.print(d + ": ");
-            System.out.println(DatabaseUtilities.getSorteios().get(d));
-        }
-        /*for (int i = 0; i < 100; i++) {
-            Chave premio= new Chave();
-            ChavesPremio cp = new ChavesPremio(premio);
-            CountingBloomFilter cbf = new CountingBloomFilter(10778691);
-            List<Chave> l= cp.getChaves();
-            for (int j = 0; j < 10778691; j++) {
-                cbf.insert(l.get(j));
-            }
-            Chave teste= new Chave();
-            if(cbf.membershipTest(teste)){
-                System.out.println(i+ ":Prémio!!!!");
-                System.out.println(premio);
-                System.out.println(teste);
-                System.out.println();
-            }
-        }*/
- /*Chave c= null;
-        CountingBloomFilter<Chave> cbm= null;
-        List<Chave> pr= null;
-        boolean b;
-        Chave teste= null;
-        for (int i = 0; i < 10; i++) {
-            c= new Chave();
-            ChavesPremio cp = new ChavesPremio(c, 1, 2);
-            pr = cp.getChaves();
-            cbm = new CountingBloomFilter<>(pr.size());
-            for (Chave ch : pr) {
-                cbm.insert(ch);
-            }
-            teste = new Chave();
-            b = cbm.membershipTest(teste);
-            if (b) {
-                System.out.println("Chave: " + c);
-                System.out.println("Teste: " + teste);
-            }
-            System.out.println("n: 1 | e: 2  : " + b);
-            for (int j = 2; j < 6; j++) {
-                for (int k = 0; k < 3; k++) {
-                    cp = new ChavesPremio(c, j, k);
-                    pr = cp.getChaves();
-                    cbm = new CountingBloomFilter<>(pr.size());
-                    for (Chave ch : pr) {
-                        cbm.insert(ch);
-                    }
-                    b = cbm.membershipTest(teste);
-                    if (b) {
-                        System.out.println("Chave: " + c);
-                        System.out.println("Teste: " + teste);
-                    }
-                    System.out.println("n: " + j + "| e: " + k + "  : " + b);
-                }
-            }
-        }*/
-
-    }
 
     protected static void loadInfo() {
         DatabaseUtilities.loadJogadores();
@@ -134,11 +62,12 @@ public class AppUtilities {
         ChavesPremio cp = new ChavesPremio(DatabaseUtilities.getSorteios().get(d), 1, 2);
         List<Chave> keys = cp.getChaves();
         CountingBloomFilter<Chave> awards = new CountingBloomFilter<>(keys.size());
+        int value= 0;
         for (int i = 0; i < keys.size(); i++) {
             awards.insert(keys.get(i));
         }
         if (awards.membershipTest(jog.getMapa().get(d))) {
-            return premioByCombination(1, 2);
+            value= premioByCombination(1,2);
         }
         for (int j = 2; j < 6; j++) {
             for (int k = 0; k < 3; k++) {
@@ -149,11 +78,11 @@ public class AppUtilities {
                     awards.insert(keys.get(i));
                 }
                 if (awards.membershipTest(jog.getMapa().get(d))) {
-                    return premioByCombination(j, k);
+                    if(value < premioByCombination(j,k)) value= premioByCombination(j,k);
                 }
             }
         }
-        return 0;
+        return value;
     }
 
     private static int premioByCombination(int nums, int estrls) {
@@ -199,6 +128,7 @@ public class AppUtilities {
                 if (entry.getValue().equals(freqNum.get(i))) {
                     mostFreq[index] = entry.getKey();
                     index++;
+                    break; // SÃ³ pode adicionar um nÃºmero
                 }
             }
             if (index == 5) {
@@ -210,9 +140,10 @@ public class AppUtilities {
         freqEstrl = freqEstrl.subList(10, 12);
         for (Entry<Integer, Integer> entry : DatabaseUtilities.estrelaCount().entrySet()) {
             for (int i = 0; i < 2; i++) {
-                if (entry.getValue().equals(freqEstrl.get(i))) {
+                if (entry.getValue().equals(freqEstrl.get(i)) && !Arrays.asList(mostFreq).contains(entry.getKey())) {
                     mostFreq[index] = entry.getKey();
                     index++;
+                    break;
                 }
             }
             if (index == 7) {
@@ -220,6 +151,27 @@ public class AppUtilities {
             }
         }
         return mostFreq;
+    }
+    
+    protected static String similarChaves(Date d, Jogador j){
+        Chave userChave= j.getMapa().get(d);
+        String s= userChave+"\n\n";
+        Map<Jogador, Chave> map= new HashMap<>();
+        for (Jogador jog: DatabaseUtilities.getJogadores()) {
+            if(!jog.equals(j) && jog.getMapa().get(d)!=null){
+                map.put(jog, jog.getMapa().get(d));
+            }
+        }
+        
+        MinHashing mh= new MinHashing(70);
+        
+        List<Chave> similarList= mh.similarList(userChave, new ArrayList<>(map.values()));
+        for(Jogador jog: map.keySet()){
+            if(similarList.contains(map.get(jog))){
+                s+= "Jogador: "+jog.getNome()+ "  "+map.get(jog)+"\n";
+            }              
+        }
+        return s;
     }
 
     protected static Date[] datesList() {
@@ -252,7 +204,7 @@ public class AppUtilities {
     protected static String getChaveStringByUser(Date d, Jogador j) {
         List<Integer> numeros = j.getMapa().get(d).getNumeros();
         List<Integer> estrelas = j.getMapa().get(d).getEstrelas();
-        String s = "Números: " + numeros.get(0);
+        String s = "NÃºmeros: " + numeros.get(0);
         for (int i = 1; i < 5; i++) {
             s += ", " + numeros.get(i);
         }
@@ -300,7 +252,7 @@ public class AppUtilities {
         for (int i : nums) {
             DatabaseUtilities.insertNumber(i);
         }
-        for (int i : nums) {
+        for (int i : estrelas) {
             DatabaseUtilities.insertEstrela(i);
         }
         DatabaseUtilities.addJogada(d, j, new Chave(nums, estrelas));
@@ -324,11 +276,11 @@ public class AppUtilities {
     }
 
     protected static boolean validDate(int day, int month, int year) {
-        //o ano´mínimo considerado válido é 2018
+        //o anoï¿½mï¿½nimo considerado vï¿½lido ï¿½ 2018
         return (month > 0 && month <= 12 && day > 0 && day <= diasDoMes(month) && year >= 2018 && year <= 2022) || (month == 2 && day == 29 && anoBissexto(year) && year >= 2018 && year <= 2022);
     }
 
-    private static boolean anoBissexto(int y) { //função protegida que verifica se um ano é bissexto
+    private static boolean anoBissexto(int y) { //funï¿½ï¿½o protegida que verifica se um ano ï¿½ bissexto
         return y % 400 == 0 || (y % 4 == 0 && y % 100 != 0);
     }
 

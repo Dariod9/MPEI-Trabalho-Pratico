@@ -31,7 +31,7 @@ public class TestCountingBloomFilter {
         List<Chave> pr = null;
         boolean b;
         Chave teste = null;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             c = new Chave();
             ChavesPremio cp = new ChavesPremio(c, 1, 2);
             pr = cp.getChaves();

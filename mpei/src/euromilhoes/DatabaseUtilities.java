@@ -224,7 +224,6 @@ public class DatabaseUtilities {
             count.put(i,frequenciaNumeros.count(Integer.toString(i)));
         }
         return count;
-        
     }
     
     protected static Map<Integer,Integer> estrelaCount(){
@@ -235,7 +234,7 @@ public class DatabaseUtilities {
         return count;
     }
     
-    private static void generatePlayers(){
+    protected static void generatePlayers(){
         for (int i = 0; i < 1000; i++) {
             jogadores.add(new Jogador("randomPlayer"+i, randomString(8)));
         }

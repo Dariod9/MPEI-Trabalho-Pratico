@@ -10,14 +10,12 @@ public class Jogador implements Serializable {
 
     private Map<Date, Chave> mapa;
     private String nome, password;
-    private int totalPremios;
     private ContadorEstocastico premiosEsperados;
 
     public Jogador(String nome, String password){
         mapa= new TreeMap<>();
         this.nome= nome;
         this.password= password;
-        totalPremios= 0;
         premiosEsperados= new ContadorEstocastico((double)1 /13);
     }
 
@@ -33,10 +31,6 @@ public class Jogador implements Serializable {
         return password;
     }
     
-    public int getTotalPremios(){
-        return totalPremios;
-    }
-    
     public int getPremiosEsperados(){
         return premiosEsperados.contagem();
     }
@@ -48,11 +42,7 @@ public class Jogador implements Serializable {
     public void removeChave(Date data){
         mapa.remove(data);
     }
-    
-    public void setPremio(int premio){
-        totalPremios+= premio;
-    }
-    
+
     public void setEvento(){
         premiosEsperados.evento();
     }

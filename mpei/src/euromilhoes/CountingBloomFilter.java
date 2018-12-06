@@ -12,6 +12,7 @@ import java.util.Map;
 /**
  *
  * @author Ricardo Carvalho
+ * @param <T>
  */
 public class CountingBloomFilter<T> implements Serializable { // Data type of T should be serialiable  
     
