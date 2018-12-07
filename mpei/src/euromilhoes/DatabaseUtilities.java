@@ -47,7 +47,7 @@ public class DatabaseUtilities {
     
     protected static void loadJogadores() {
         try {
-            FileInputStream fileIn = new FileInputStream("src/euromilhoes/data/data01.bin");
+            FileInputStream fileIn = new FileInputStream("euromilhoes/data/data01.bin");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             jogadores = (List<Jogador>) in.readObject();
             in.close();
@@ -63,7 +63,7 @@ public class DatabaseUtilities {
 
     protected static void saveJogadores() {
         try {
-            FileOutputStream fileOut = new FileOutputStream("src/euromilhoes/data/data01.bin");
+            FileOutputStream fileOut = new FileOutputStream("euromilhoes/data/data01.bin");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(jogadores);
             out.close();
@@ -75,7 +75,7 @@ public class DatabaseUtilities {
     
     protected static void loadDates() {
         try {
-            FileInputStream fileIn = new FileInputStream("src/euromilhoes/data/data02.bin");
+            FileInputStream fileIn = new FileInputStream("euromilhoes/data/data02.bin");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             dates = (List<Date>) in.readObject();
             in.close();
@@ -91,7 +91,7 @@ public class DatabaseUtilities {
 
     protected static void saveDates() {
         try {
-            FileOutputStream fileOut = new FileOutputStream("src/euromilhoes/data/data02.bin");
+            FileOutputStream fileOut = new FileOutputStream("euromilhoes/data/data02.bin");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(dates);
             out.close();
@@ -103,7 +103,7 @@ public class DatabaseUtilities {
     
     protected static void loadSorteios() {
         try {
-            FileInputStream fileIn = new FileInputStream("src/euromilhoes/data/data03.bin");
+            FileInputStream fileIn = new FileInputStream("euromilhoes/data/data03.bin");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             sorteios = (Map<Date,Chave>) in.readObject();
             in.close();
@@ -119,7 +119,7 @@ public class DatabaseUtilities {
 
     protected static void saveSorteios() {
         try {
-            FileOutputStream fileOut = new FileOutputStream("src/euromilhoes/data/data03.bin");
+            FileOutputStream fileOut = new FileOutputStream("euromilhoes/data/data03.bin");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(sorteios);
             out.close();
@@ -131,7 +131,7 @@ public class DatabaseUtilities {
     
     protected static void loadFrequenciaNumeros() {
         try {
-            FileInputStream fileIn = new FileInputStream("src/euromilhoes/data/data04.bin");
+            FileInputStream fileIn = new FileInputStream("euromilhoes/data/data04.bin");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             frequenciaNumeros = (CountingBloomFilter<String>) in.readObject();
             in.close();
@@ -147,7 +147,7 @@ public class DatabaseUtilities {
 
     protected static void saveFrequenciaNumeros() {
         try {
-            FileOutputStream fileOut = new FileOutputStream("src/euromilhoes/data/data04.bin");
+            FileOutputStream fileOut = new FileOutputStream("euromilhoes/data/data04.bin");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(frequenciaNumeros);
             out.close();
@@ -159,7 +159,7 @@ public class DatabaseUtilities {
     
     protected static void loadFrequenciaEstrelas() {
         try {
-            FileInputStream fileIn = new FileInputStream("src/euromilhoes/data/data05.bin");
+            FileInputStream fileIn = new FileInputStream("euromilhoes/data/data05.bin");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             frequenciaEstrelas = (CountingBloomFilter<String>) in.readObject();
             in.close();
@@ -175,7 +175,7 @@ public class DatabaseUtilities {
 
     protected static void saveFrequenciaEstrelas() {
         try {
-            FileOutputStream fileOut = new FileOutputStream("src/euromilhoes/data/data05.bin");
+            FileOutputStream fileOut = new FileOutputStream("euromilhoes/data/data05.bin");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(frequenciaEstrelas);
             out.close();
