@@ -6,7 +6,6 @@
 package euromilhoes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -140,7 +139,7 @@ public class AppUtilities {
         freqEstrl = freqEstrl.subList(10, 12);
         for (Entry<Integer, Integer> entry : DatabaseUtilities.estrelaCount().entrySet()) {
             for (int i = 0; i < 2; i++) {
-                if (entry.getValue().equals(freqEstrl.get(i)) && !Arrays.asList(mostFreq).contains(entry.getKey())) {
+                if (entry.getValue().equals(freqEstrl.get(i))) {
                     mostFreq[index] = entry.getKey();
                     index++;
                     break;

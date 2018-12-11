@@ -98,8 +98,8 @@ public class CountingBloomFilter<T> implements Serializable { // Data type of T 
         //a-b
         Map<Integer,Integer> seeds= new HashMap<>();
         while(seeds.size()<k){
-            int a= (int) (k+Math.random()*15);
-            int b= (int) (k+Math.random()*10);
+            int a= (int) (1+Math.random()*(p-1));
+            int b= (int) (Math.random()*(p-1));
             seeds.put(a, b);
         }
         return seeds;

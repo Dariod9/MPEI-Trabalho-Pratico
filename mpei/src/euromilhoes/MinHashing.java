@@ -57,7 +57,7 @@ public class MinHashing {
 
         for (int i = 0; i < hashes; i++) {
             for (int j = 0; j < c.hashArrays().length; j++) {
-                values.add(c.hashArrays()[j] ^ seeds[i]);
+                values.add(c.hashArrays()[j] ^ seeds[j]);
             }
         }
         return values.toArray(new Integer[0]);

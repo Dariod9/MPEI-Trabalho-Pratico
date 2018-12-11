@@ -16,7 +16,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -36,7 +35,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SpringLayout;
-import javax.swing.border.LineBorder;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
@@ -457,7 +455,7 @@ public class AppWindow {
         if (id == 3) {
             int[] mostFrequent = AppUtilities.mostFrequentChave();
             for (int i = 0; i < 7; i++) {
-                nums[i].setSelectedIndex(mostFrequent[i]);
+                nums[i].setSelectedIndex(mostFrequent[i]-1);
             }
         }
 
